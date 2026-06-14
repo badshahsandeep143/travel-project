@@ -3,90 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travel Recommendation</title>
+    <title>Travel Recommendation System</title>
     <style>
-        /* Thodi basic styling taaki navbar achha dikhe */
-        nav { display: flex; justify-content: space-between; background-color: #333; padding: 15px; color: white; }
-        nav a { color: white; margin: 0 10px; text-decoration: none; }
-        .search-container { display: flex; gap: 10px; }
+        /* CSS se design set kiya hai taaki ek screen par sab fit ho jaye */
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+        
+        nav { display: flex; justify-content: space-between; align-items: center; background-color: #333; padding: 15px 20px; color: white; }
+        nav .nav-links a { color: white; margin-right: 15px; text-decoration: none; font-weight: bold; }
+        
+        .search-section { display: flex; gap: 10px; }
+        .search-section input { padding: 8px; width: 200px; border-radius: 4px; border: none; }
+        .search-section button { padding: 8px 15px; cursor: pointer; background-color: #5cb85c; color: white; border: none; border-radius: 4px; font-weight: bold; }
+        #clearBtn { background-color: #d9534f; }
+
+        main { padding: 20px; text-align: center; }
+        
+        /* Photos ko ek sath ek line (grid) mein laane ke liye flexbox ka use */
+        #results { display: flex; justify-content: center; gap: 30px; margin-top: 30px; flex-wrap: wrap; }
+        
+        .card { border: 1px solid #ddd; border-radius: 8px; padding: 15px; width: 350px; box-shadow: 2px 2px 10px rgba(0,0,0,0.1); }
+        .card img { width: 100%; height: 220px; object-fit: cover; border-radius: 5px; }
+        .card h2 { margin: 10px 0 5px 0; color: #333; }
+        .card p { color: #555; }
     </style>
 </head>
 <body>
 
     <nav>
-        <div class="links">
+        <div class="nav-links">
             <a href="index.html">Home</a>
             <a href="about.html">About Us</a>
             <a href="contact.html">Contact Us</a>
         </div>
-        <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Search destination...">
+        <div class="search-section">
+            <input type="text" id="searchInput" placeholder="Enter destination...">
             <button id="searchBtn" onclick="searchDestination()">Search</button>
             <button id="clearBtn" onclick="clearResults()">Clear</button>
         </div>
     </nav>
 
-    <main style="padding: 20px;">
+    <main>
         <h1>Welcome to Travel Recommendation System</h1>
-        <p>Explore the best beaches, majestic temples, and beautiful countries for your next vacation.</p>
+        <p>Type "beach", "temple", or "country" to find the best places!</p>
         
         <div id="results"></div>
     </main>
 
-</body>
-<script>
-        // Yahan humne pehle se kuch jagahon ka data aur photos (links) save kar li hain
+    <script>
         const travelData = {
             beaches: [
-                { name: "Bora Bora, French Polynesia", imageUrl: "https://images.unsplash.com/photo-1502003148287-a82ef80a6abc?w=400 " , description: "Relax on the beautiful white sand beaches." },
-                { name: "Maldives", imageUrl: "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=400", description: "Crystal clear waters and stunning resorts." }
+                { name: "Bora Bora, French Polynesia", imageUrl: "https://images.unsplash.com/photo-1502003148287-a82ef80a6abc?w=500", description: "Relax on the beautiful white sand beaches." },
+                { name: "Maldives", imageUrl: "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=500", description: "Crystal clear waters and stunning resorts." }
             ],
             temples: [
-                { name: "Angkor Wat, Cambodia", imageUrl: "https://images.unsplash.com/photo-1600803561919-4828ff7b713b?w=400", description: "A magnificent ancient temple complex." },
-                { name: "Taj Mahal, India", imageUrl: "https://images.unsplash.com/photo-1564507592224-2c06130dddd4?w=400", description: "A beautiful symbol of love and historic architecture." }
+                { name: "Angkor Wat, Cambodia", imageUrl: "https://images.unsplash.com/photo-1600803561919-4828ff7b713b?w=500", description: "A magnificent ancient temple complex." },
+                { name: "Taj Mahal, India", imageUrl: "https://images.unsplash.com/photo-1564507592224-2c06130dddd4?w=500", description: "A beautiful symbol of love and historic architecture." }
             ],
             countries: [
-                { name: "Japan", imageUrl: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=400", description: "Explore the mix of modern cities and traditional culture." },
-                { name: "Australia", imageUrl: "https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?w=400", description: "Discover the Outback and beautiful coastlines." }
+                { name: "Japan", imageUrl: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=500", description: "Explore the mix of modern cities and traditional culture." },
+                { name: "Australia", imageUrl: "https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?w=500", description: "Discover the Outback and beautiful coastlines." }
             ]
         };
 
-        // Search Button dabane par yeh function chalega
         function searchDestination() {
             const input = document.getElementById('searchInput').value.toLowerCase();
             const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = ""; // Pehle ke results hata dega
+            resultsDiv.innerHTML = ""; 
 
             let dataToShow = [];
 
-            // Check karega user ne kya type kiya hai
             if (input.includes('beach')) {
                 dataToShow = travelData.beaches;
             } else if (input.includes('temple')) {
                 dataToShow = travelData.temples;
-            } else if (input.includes('country') || input.includes('countries')) {
+            } else if (input.includes('country')) {
                 dataToShow = travelData.countries;
             } else {
-                resultsDiv.innerHTML = "<p>No results found. Please search for 'beach', 'temple', or 'country'.</p>";
+                resultsDiv.innerHTML = "<p>No results found. Please try again.</p>";
                 return;
             }
 
-            // Screen par results aur photos dikhayega
             dataToShow.forEach(item => {
                 resultsDiv.innerHTML += `
-                    <div style="border: 1px solid #ccc; padding: 15px; margin: 15px 0; border-radius: 8px; max-width: 450px;">
-                        <h2 style="margin-top: 0;">${item.name}</h2>
-                        <img src="${item.imageUrl}" alt="${item.name}" style="width: 100%; height: auto; border-radius: 5px;">
+                    <div class="card">
+                        <img src="${item.imageUrl}" alt="${item.name}">
+                        <h2>${item.name}</h2>
                         <p>${item.description}</p>
                     </div>
                 `;
             });
         }
 
-        // Clear Button dabane par yeh function chalega
         function clearResults() {
             document.getElementById('searchInput').value = "";
             document.getElementById('results').innerHTML = "";
         }
     </script>
+
+</body>
 </html>
